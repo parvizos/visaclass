@@ -12,6 +12,7 @@ node_modules/
 # Database
 *.sqlite
 *.sqlite3
+backend/database.sqlite
 
 # Build output
 dist/
@@ -38,3 +39,4 @@ Thumbs.db
 
 # Claude
 .claude/
+node_modules/
