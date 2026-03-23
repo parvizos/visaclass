@@ -1,0 +1,786 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VISACLASS - University Application Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .form-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .universities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .university-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .university-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .university-card.selected {
+            border-color: #667eea;
+            background-color: #f0f4ff;
+        }
+
+        .university-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            margin-right: 10px;
+            accent-color: #667eea;
+        }
+
+        .university-info {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+        }
+
+        .university-details {
+            flex: 1;
+        }
+
+        .university-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .university-meta {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .selected-universities {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .selected-universities h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .selected-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .selected-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+
+        .selected-item button {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+
+        .selected-item button:hover {
+            background: #ff3838;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .step-indicator {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .step.active .step-circle {
+            background: #667eea;
+            color: white;
+        }
+
+        .step.completed .step-circle {
+            background: #4caf50;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .step.active .step-label {
+            color: #667eea;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .universities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .step-indicator {
+                gap: 15px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>VISACLASS</h1>
+            <p>University Application Form - Apply to Multiple Universities at Once</p>
+        </div>
+
+        <div class="content">
+            <div class="step-indicator">
+                <div class="step active" id="step1-indicator">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Select Universities</div>
+                </div>
+                <div class="step" id="step2-indicator">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Choose Department</div>
+                </div>
+                <div class="step" id="step3-indicator">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Your Information</div>
+                </div>
+                <div class="step" id="step4-indicator">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">Review & Submit</div>
+                </div>
+            </div>
+
+            <div id="error-message" class="error-message"></div>
+            <div id="success-message" class="success-message"></div>
+
+            <!-- STEP 1: Select Universities -->
+            <div id="step1" class="form-section">
+                <h2 class="section-title">Step 1: Select Universities</h2>
+                <p style="margin-bottom: 20px; color: #666;">Choose one or more universities to apply to:</p>
+                <div class="universities-grid" id="universities-grid"></div>
+                <div id="selected-universities" class="selected-universities hidden">
+                    <h3>Selected Universities</h3>
+                    <div class="selected-list" id="selected-list"></div>
+                </div>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="goToStep(2)">Continue to Step 2 </button>
+                </div>
+            </div>
+
+            <!-- STEP 2: Choose Department -->
+            <div id="step2" class="form-section hidden">
+                <h2 class="section-title">Step 2: Choose Department</h2>
+                <p style="margin-bottom: 20px; color: #666;">Select a department for your application:</p>
+                <div class="form-group full">
+                    <label>Department/Program</label>
+                    <select id="department" onchange="updateDepartmentSelection()">
+                        <option value="">-- Select Department --</option>
+                        <option value="engineering">Engineering</option>
+                        <option value="medicine">Medicine</option>
+                        <option value="business">Business Administration</option>
+                        <option value="law">Law</option>
+                        <option value="computer-science">Computer Science</option>
+                        <option value="economics">Economics</option>
+                        <option value="psychology">Psychology</option>
+                        <option value="nursing">Nursing</option>
+                        <option value="architecture">Architecture</option>
+                        <option value="arts">Arts & Humanities</option>
+                    </select>
+                </div>
+                <div class="form-group full" style="margin-top: 20px;">
+                    <label>Degree Level</label>
+                    <select id="degree-level">
+                        <option value="">-- Select Degree --</option>
+                        <option value="bachelor">Bachelor's Degree</option>
+                        <option value="master">Master's Degree</option>
+                        <option value="phd">Ph.D.</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button class="btn-secondary" onclick="goToStep(1)"> Back</button>
+                    <button class="btn-primary" onclick="goToStep(3)">Continue to Step 3 </button>
+                </div>
+            </div>
+
+            <!-- STEP 3: Your Information -->
+            <div id="step3" class="form-section hidden">
+                <h2 class="section-title">Step 3: Your Information</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name *</label>
+                        <input type="text" id="firstName" placeholder="John">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name *</label>
+                        <input type="text" id="lastName" placeholder="Doe">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email Address *</label>
+                        <input type="email" id="email" placeholder="john@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" id="phone" placeholder="+1 (555) 123-4567">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nationality *</label>
+                        <input type="text" id="nationality" placeholder="Country">
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth *</label>
+                        <input type="date" id="dob">
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Current Education Level *</label>
+                        <select id="education-level">
+                            <option value="">-- Select Education Level --</option>
+                            <option value="high-school">High School</option>
+                            <option value="bachelor">Bachelor's Degree</option>
+                            <option value="master">Master's Degree</option>
+                            <option value="diploma">Diploma</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn-secondary" onclick="goToStep(2)"> Back</button>
+                    <button class="btn-primary" onclick="goToStep(4)">Continue to Step 4 </button>
+                </div>
+            </div>
+
+            <!-- STEP 4: Review & Submit -->
+            <div id="step4" class="form-section hidden">
+                <h2 class="section-title">Step 4: Review & Submit</h2>
+                <p style="margin-bottom: 20px; color: #666;">Please review your information before submitting:</p>
+                
+                <div class="selected-universities">
+                    <h3>Selected Universities & Program</h3>
+                    <div id="review-universities" style="line-height: 1.8; color: #555;"></div>
+                    <p style="margin-top: 15px; font-weight: 500; color: #333;">Department: <span id="review-department"></span></p>
+                    <p style="font-weight: 500; color: #333;">Degree Level: <span id="review-degree"></span></p>
+                </div>
+
+                <div class="selected-universities">
+                    <h3>Your Information</h3>
+                    <div id="review-info" style="line-height: 1.8; color: #555;"></div>
+                </div>
+
+                <div class="form-group full" style="margin-top: 20px;">
+                    <label>Additional Comments / Personal Statement</label>
+                    <textarea id="personal-statement" placeholder="Tell us about your academic goals and why you want to study in Turkey..."></textarea>
+                </div>
+
+                <div style="background: #e8f5e9; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #4caf50;">
+                    <input type="checkbox" id="agree-terms" style="margin-right: 10px;">
+                    <label for="agree-terms" style="display: inline;">I agree to submit this application and acknowledge that the information provided is accurate.</label>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-secondary" onclick="goToStep(3)"> Back</button>
+                    <button class="btn-primary" onclick="submitApplication()"> Submit Application</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Universities Data
+        const universities = [
+            { id: 1, name: 'Istanbul University', city: 'Istanbul', type: 'Public', tuition: '500-2000', ranking: 1 },
+            { id: 2, name: 'Boğaziçi University', city: 'Istanbul', type: 'Public', tuition: '300-1500', ranking: 2 },
+            { id: 3, name: 'Middle East Technical University', city: 'Ankara', type: 'Public', tuition: '400-1800', ranking: 3 },
+            { id: 4, name: 'Koç University', city: 'Istanbul', type: 'Private', tuition: '15000-25000', ranking: 4 },
+            { id: 5, name: 'Bilkent University', city: 'Ankara', type: 'Private', tuition: '12000-20000', ranking: 5 },
+            { id: 6, name: 'Sabancı University', city: 'Istanbul', type: 'Private', tuition: '18000-28000', ranking: 6 },
+        ];
+
+        let selectedUniversities = [];
+        let currentStep = 1;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderUniversities();
+        });
+
+        function renderUniversities() {
+            const grid = document.getElementById('universities-grid');
+            grid.innerHTML = universities.map(uni => `
+                <div class="university-card" onclick="toggleUniversity(${uni.id})" id="uni-${uni.id}">
+                    <div class="university-info">
+                        <input type="checkbox" class="university-checkbox" id="checkbox-${uni.id}" onchange="event.stopPropagation()">
+                        <div class="university-details">
+                            <div class="university-name">${uni.name}</div>
+                            <div class="university-meta">
+                                <div>${uni.city}  ${uni.type}</div>
+                                <div>$${uni.tuition}/year</div>
+                                <div>Ranking: #${uni.ranking}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleUniversity(id) {
+            const checkbox = document.getElementById(`checkbox-${id}`);
+            checkbox.checked = !checkbox.checked;
+            updateSelectedUniversities();
+        }
+
+        function updateSelectedUniversities() {
+            selectedUniversities = universities.filter(uni => {
+                const checkbox = document.getElementById(`checkbox-${uni.id}`);
+                return checkbox.checked;
+            });
+
+            // Update UI
+            selectedUniversities.forEach(uni => {
+                document.getElementById(`uni-${uni.id}`).classList.add('selected');
+            });
+
+            universities.forEach(uni => {
+                if (!selectedUniversities.find(u => u.id === uni.id)) {
+                    document.getElementById(`uni-${uni.id}`).classList.remove('selected');
+                }
+            });
+
+            // Show/hide selected list
+            const container = document.getElementById('selected-universities');
+            if (selectedUniversities.length > 0) {
+                container.classList.remove('hidden');
+                const list = document.getElementById('selected-list');
+                list.innerHTML = selectedUniversities.map(uni => `
+                    <div class="selected-item">
+                        <span>${uni.name}, ${uni.city}</span>
+                        <button type="button" onclick="removeUniversity(${uni.id})">Remove</button>
+                    </div>
+                `).join('');
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        function removeUniversity(id) {
+            const checkbox = document.getElementById(`checkbox-${id}`);
+            checkbox.checked = false;
+            updateSelectedUniversities();
+        }
+
+        function updateDepartmentSelection() {
+            // This can be extended to show department-specific info
+            console.log('Department selected');
+        }
+
+        function goToStep(step) {
+            // Validation
+            if (step === 2 && selectedUniversities.length === 0) {
+                showError('Please select at least one university');
+                return;
+            }
+
+            if (step === 4) {
+                const dept = document.getElementById('department').value;
+                const degree = document.getElementById('degree-level').value;
+                if (!dept || !degree) {
+                    showError('Please select both department and degree level');
+                    return;
+                }
+
+                const firstName = document.getElementById('firstName').value.trim();
+                const lastName = document.getElementById('lastName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const nationality = document.getElementById('nationality').value.trim();
+                const dob = document.getElementById('dob').value.trim();
+                const education = document.getElementById('education-level').value;
+
+                if (!firstName || !lastName || !email || !phone || !nationality || !dob || !education) {
+                    showError('Please fill in all required fields');
+                    return;
+                }
+
+                // Generate review
+                generateReview();
+            }
+
+            hideAllSteps();
+            document.getElementById(`step${step}`).classList.remove('hidden');
+            updateStepIndicator(step);
+            currentStep = step;
+            window.scrollTo(0, 0);
+        }
+
+        function hideAllSteps() {
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`step${i}`).classList.add('hidden');
+            }
+        }
+
+        function updateStepIndicator(step) {
+            for (let i = 1; i <= 4; i++) {
+                const indicator = document.getElementById(`step${i}-indicator`);
+                if (i < step) {
+                    indicator.classList.add('completed');
+                    indicator.classList.remove('active');
+                } else if (i === step) {
+                    indicator.classList.add('active');
+                    indicator.classList.remove('completed');
+                } else {
+                    indicator.classList.remove('active', 'completed');
+                }
+            }
+        }
+
+        function generateReview() {
+            // Universities
+            const uniReview = selectedUniversities.map(uni => `<div> ${uni.name}, ${uni.city}</div>`).join('');
+            document.getElementById('review-universities').innerHTML = uniReview;
+
+            // Department and Degree
+            const deptSelect = document.getElementById('department');
+            const degreeSelect = document.getElementById('degree-level');
+            document.getElementById('review-department').textContent = deptSelect.options[deptSelect.selectedIndex].text;
+            document.getElementById('review-degree').textContent = degreeSelect.options[degreeSelect.selectedIndex].text;
+
+            // Personal Info
+            const info = `
+                <div><strong>Name:</strong> ${document.getElementById('firstName').value} ${document.getElementById('lastName').value}</div>
+                <div><strong>Email:</strong> ${document.getElementById('email').value}</div>
+                <div><strong>Phone:</strong> ${document.getElementById('phone').value}</div>
+                <div><strong>Nationality:</strong> ${document.getElementById('nationality').value}</div>
+                <div><strong>Date of Birth:</strong> ${document.getElementById('dob').value}</div>
+                <div><strong>Current Education:</strong> ${document.getElementById('education-level').options[document.getElementById('education-level').selectedIndex].text}</div>
+            `;
+            document.getElementById('review-info').innerHTML = info;
+        }
+
+        async function submitApplication() {
+            if (!document.getElementById('agree-terms').checked) {
+                showError('Please agree to the terms before submitting');
+                return;
+            }
+
+            // Prepare data for API
+            const applicationData = {
+                personalInfo: {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    nationality: document.getElementById('nationality').value,
+                    dateOfBirth: document.getElementById('dob').value,
+                    currentEducation: document.getElementById('education-level').value
+                },
+                programSelection: {
+                    university: selectedUniversities[0]?.id.toString(), // Primary university
+                    department: document.getElementById('department').value,
+                    degreeLevel: document.getElementById('degree-level').value
+                },
+                additionalInfo: {
+                    personalStatement: document.getElementById('personal-statement').value,
+                    selectedUniversities: selectedUniversities.map(uni => ({
+                        id: uni.id,
+                        name: uni.name,
+                        city: uni.city
+                    }))
+                }
+            };
+
+            try {
+                // Show loading state
+                const submitBtn = event.target;
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Submitting...';
+                submitBtn.disabled = true;
+
+                // Make API call to backend
+                const response = await fetch('http://localhost:5000/api/applications', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(applicationData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    // Store successful application
+                    localStorage.setItem('visaclass-application', JSON.stringify({
+                        ...applicationData,
+                        applicationId: result.data.applicationId,
+                        submittedAt: new Date().toISOString()
+                    }));
+
+                    showSuccess(`Application submitted successfully! Your application ID is ${result.data.applicationId}. You have applied to ${selectedUniversities.length} universities.`);
+                    
+                    setTimeout(() => {
+                        location.reload();
+                    }, 5000);
+                } else {
+                    throw new Error(result.message || 'Submission failed');
+                }
+
+            } catch (error) {
+                console.error('Application submission error:', error);
+                showError(`Failed to submit application: ${error.message}. Please check your connection and try again.`);
+                
+                // Reset button
+                const submitBtn = document.querySelector('button[onclick="submitApplication()"]');
+                if (submitBtn) {
+                    submitBtn.textContent = 'Submit Application';
+                    submitBtn.disabled = false;
+                }
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
